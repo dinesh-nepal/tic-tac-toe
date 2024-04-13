@@ -4,7 +4,8 @@ let newBtn = document.querySelector("#new-btn");
 let msgContainer = document.querySelector(".msg-container");
 let msg = document.querySelector("#msg");
 
-let turnO = true; //playerX,playerO
+let turnO = true;
+let count=0; //playerX,playerO
 const winning_patterns = [
   [0, 1, 2],
   [0, 3, 6],
@@ -17,6 +18,7 @@ const winning_patterns = [
 ];
 const resetGame = () => {
   turnO = true;
+  count=0;
   enabledBoxes();
   boxes.innerText = "";
   msgContainer.classList.add("hide");
@@ -28,13 +30,20 @@ boxes.forEach((box) => {
       //player O
       box.innerText = "O";
       turnO = false;
+      box.style.color='red';
     } else {
       //player X
       box.innerText = "X";
       turnO = true;
+        box.style.color='green';
     }
     box.disabled = true;
-    checkWinner();
+    count++;
+   let isWinner= checkWinner();
+   if(count===9 && !isWinner)
+   {
+    checkDraw();
+   }
   });
 });
 const disableBoxes=()=>{
@@ -53,6 +62,12 @@ const showWinner = (winner) => {
   msgContainer.classList.remove("hide");
   disableBoxes();
 };
+const checkDraw=()=>
+{
+  msg.innerText=`Game was a Draw`;
+  msgContainer.classList.remove("hide");
+  disableBoxes();
+};
 const checkWinner = () => {
   for (let pattern of winning_patterns) {
     
@@ -65,7 +80,7 @@ const checkWinner = () => {
       {
        
          showWinner(pos1val);
-        
+        return true;
       }
     }
   }
